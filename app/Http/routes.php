@@ -19,9 +19,22 @@ Route::get('/', function () {
 Route::auth();
 
 // Domain Routes
-Route::get('/admin/domains', 'DomainController@index');
-Route::post('/admin/domain', 'DomainController@store');
-Route::delete('/admin/domain/{domain}', 'DomainController@destroy');
+Route::get('/admin/domains', [
+    'as' => 'domain.index',
+    'DomainController@index',
+]);
+Route::get('/admin/domain/new', [
+    'as'   => 'domain.create',
+    'uses' => 'DomainController@create',
+]);
+Route::post('/admin/domain', [
+    'as'   => 'domain.store',
+    'uses' => 'DomainController@store',
+]);
+Route::delete('/admin/domain/{domain}', [
+    'as'   => 'domain.destroy',
+    'uses' => 'DomainController@destroy',
+]);
 
 /*
 |--------------------------------------------------------------------------
