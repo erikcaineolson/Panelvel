@@ -15,6 +15,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Authentication Routes
+Route::auth();
+
+// Domain Routes
+Route::get('/admin/domains', 'DomainController@index');
+Route::post('/admin/domain', 'DomainController@store');
+Route::delete('/admin/domain/{domain}', 'DomainController@destroy');
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -27,5 +35,4 @@ Route::get('/', function () {
 */
 
 Route::group(['middleware' => ['web']], function () {
-    //
 });

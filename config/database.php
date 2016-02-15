@@ -86,6 +86,18 @@ return [
             'prefix'   => '',
         ],
 
+        'wp_mysql' => [
+            'driver'    => env('WP_DB_DRIVER', 'mysql'),
+            'host'      => env('WP_DB_HOST', 'localhost'),
+            'database'  => env('WP_DB_DATABASE', 'forge'),
+            'username'  => env('DB_USERNAME', 'forge'),
+            'password'  => env('DB_PASSWORD', ''),
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+            'strict'    => false,
+            'engine'    => null,
+        ],
     ],
 
     /*

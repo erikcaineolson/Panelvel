@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\Domain;
 
 class User extends Authenticatable
 {
@@ -23,4 +24,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function domains()
+    {
+        return $this->hasMany(Domain::class);
+    }
 }
