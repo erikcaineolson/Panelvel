@@ -64,15 +64,18 @@ class DomainController extends Controller
     {
         $input = $request->only([
             'domain_name',
-            'username',
-            'password',
             'is_word_press',
         ]);
+
+        $username = substr(str_replace('.', '', $input['domain_name']), 6) . date('ymd');
+        $password = string_random(12);
 
         try {
             $domain = Domain::create([
                 'name'          => $input['domain_name'],
                 'is_word_press' => $input['is_word_press'],
+                'username'      => $username,
+                'password'      => $password,
                 'user_id'       => Auth::user()->id,
             ]);
 

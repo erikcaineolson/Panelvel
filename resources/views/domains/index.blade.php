@@ -3,7 +3,7 @@
 @section('pageTitle', 'Current Domains')
 
 @section('content')
-    <h1>Current Domains</h1>
+    <h1>Current Domains&nbsp; &nbsp; &nbsp;<a class="btn btn-success" href="{{ route('domain.create') }}"><span class="glyphicon glyphicon-plus"></span></a></h1>
     <table class="table table-bordered table-responsive">
         <thead>
         <tr>
