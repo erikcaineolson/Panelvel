@@ -32,28 +32,26 @@ Route::group(['middleware' => ['web']], function () {
 Route::group(['middleware' => 'web'], function () {
     Route::auth();
 
-    Route::group(['middleware' => 'auth'], function() {
-        Route::get('/home', 'HomeController@index');
+    Route::get('/home', 'HomeController@index');
 
-        // Domain Routes
-        Route::get('/domains', [
-            'as'   => 'domain.index',
-            'uses' => 'DomainController@index',
-        ]);
+    // Domain Routes
+    Route::get('/domains', [
+        'as'   => 'domain.index',
+        'uses' => 'DomainController@index',
+    ]);
 
-        Route::get('/domain/new', [
-            'as'   => 'domain.create',
-            'uses' => 'DomainController@create',
-        ]);
+    Route::get('/domain/new', [
+        'as'   => 'domain.create',
+        'uses' => 'DomainController@create',
+    ]);
 
-        Route::post('/domain', [
-            'as'   => 'domain.store',
-            'uses' => 'DomainController@store',
-        ]);
+    Route::post('/domain', [
+        'as'   => 'domain.store',
+        'uses' => 'DomainController@store',
+    ]);
 
-        Route::delete('/domain/{domain}', [
-            'as'   => 'domain.destroy',
-            'uses' => 'DomainController@destroy',
-        ]);
-    });
+    Route::delete('/domain/{domain}', [
+        'as'   => 'domain.destroy',
+        'uses' => 'DomainController@destroy',
+    ]);
 });

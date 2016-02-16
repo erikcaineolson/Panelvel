@@ -33,12 +33,23 @@ class DomainController extends Controller
 
     public function create()
     {
-        //
+        return response()->view('domains.form');
     }
 
     public function destroy($id)
     {
-        //
+        $domain = Domain::find($id);
+        $request = new Request();
+
+        try {
+            $domain->delete();
+
+            $request->session()->flash('success', 'Domain ' . $id . ' has been created!');
+        } catch (Exception $e) {
+            $request->session()->flash('danger', 'Domain ' . $id . ' was not created, please try again.');
+        }
+
+        return view('domains.index');
     }
 
     /**
@@ -60,14 +71,12 @@ class DomainController extends Controller
         try {
             $domain = Domain::create([
                 'name'          => $input['domain_name'],
-                'username'      => $input['username'],
-                'password'      => $input['password'],
                 'is_word_press' => $input['is_word_press'],
                 'user_id'       => Auth::user()->id,
             ]);
 
             $request->session()->flash('success', $input['domain_name'] . ' has been created!');
-        }catch(Exception $e){
+        } catch (Exception $e) {
             $request->session()->flash('danger', $input['domain_name'] . ' was not created, please try again.');
         }
 

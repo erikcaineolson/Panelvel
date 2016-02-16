@@ -17,17 +17,23 @@
         </tr>
         </thead>
         <tbody>
-        @foreach ($domains as $domain)
+        @if (isset($domains))
+            @foreach ($domains as $domain)
+                <tr>
+                    <td class="text-center">{{ $domain->id }}</td>
+                    <td><a href="http://{{ $domain->name }}" target="_blank">{{ $domain->name }}</a></td>
+                    <td>{{ $domain->username }}</td>
+                    <td class="text-center">{{ $domain->isWordPress ? 'Yes' : 'No' }}</td>
+                    <td class="text-center">{{ $domain->createdAt }}</td>
+                    <td class="text-center">{{ $domain->userId }}</td>
+                    <td class="text-center">{{ $domain->trashed() ? 'Created' : 'Queued' }}</td>
+                </tr>
+            @endforeach
+        @else
             <tr>
-                <td class="text-center">{{ $domain->id }}</td>
-                <td><a href="http://{{ $domain->name }}" target="_blank">{{ $domain->name }}</a></td>
-                <td>{{ $domain->username }}</td>
-                <td class="text-center">{{ $domain->isWordPress ? 'Yes' : 'No' }}</td>
-                <td class="text-center">{{ $domain->createdAt }}</td>
-                <td class="text-center">{{ $domain->userId }}</td>
-                <td class="text-center">{{ $domain->trashed() ? 'Created' : 'Queued' }}</td>
+                <td colspan="7">There are currently no domains created.</td>
             </tr>
-        @endforeach
+        @endif
         </tbody>
     </table>
 @endsection
