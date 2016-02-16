@@ -88,7 +88,7 @@ class InstallSite extends Command
     protected function setPhpConfigFile()
     {
         $phpConfigFilename = env('TEMPLATE_PHP');
-        $this->phpConfigFile = file_get_contents($this->directories['php'] . $phpConfigFilename);
+        $this->phpConfigFile = file_get_contents($this->directories['nginx'] . $phpConfigFilename);
     }
 
     /**
