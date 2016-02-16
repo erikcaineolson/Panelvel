@@ -164,13 +164,13 @@ class InstallSite extends Command
         //  strip the last "/" in the event there is one, and add a new one,
         //  guaranteeing all directory structures are the same
         $this->directories = [
-            'bash'      => rtrim(env('DIRECTORY_BASH_SCRIPTS'), '/') . '/',
-            'nginx'     => rtrim(env('DIRECTORY_NGINX'), '/') . '/',
-            'php'       => rtrim(env('DIRECTORY_PHP'), '/') . '/',
-            'templates' => rtrim(env('DIRECTORY_TEMPLATES'), '/') . '/',
-            'web'       => rtrim(env('DIRECTORY_WEB'), '/') . '/',
-            'public'    => rtrim(env('DIRECTORY_PUBLIC'), '/') . '/',
-            'logs'      => rtrim(env('DIRECTORY_LOGS'), '/') . '/',
+            'bash'      => env('DIRECTORY_BASH_SCRIPTS'),
+            'nginx'     => env('DIRECTORY_NGINX'),
+            'php'       => env('DIRECTORY_PHP'),
+            'templates' => env('DIRECTORY_TEMPLATES'),
+            'web'       => env('DIRECTORY_WEB'),
+            'public'    => env('DIRECTORY_PUBLIC'),
+            'logs'      => env('DIRECTORY_LOGS'),
         ];
     }
 
