@@ -67,7 +67,7 @@ class DomainController extends Controller
             'is_word_press',
         ]);
 
-        $username = substr(str_replace('.', '', $input['domain_name']), 6) . date('ymd');
+        $username = substr(str_replace('.', '', $input['domain_name']), 0, 6) . date('ymd');
         $password = str_random(12);
 
         try {
