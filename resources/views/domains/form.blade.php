@@ -12,7 +12,7 @@
         <div class="row">&nbsp;</div>
         <div class="row">
             <div class="col-sm-6 col-sm-offset-3 col-xs-12 col-xs-offset-0">
-                <input id="is_word_press" name="is_word_press" type="checkbox">&nbsp; <label for="is_word_press">Is this a WordPress site?</label>
+                <input id="is_word_press" name="is_word_press" type="checkbox" value="1">&nbsp; <label for="is_word_press">Is this a WordPress site?</label>
             </div>
         </div>
         <div class="row">&nbsp;</div>
