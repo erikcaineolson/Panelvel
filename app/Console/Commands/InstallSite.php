@@ -191,7 +191,7 @@ class InstallSite extends Command
             $logDirectory = $this->directories['web'] . $domain->name . $this->directories['logs'];
             $publicDirectory = $this->directories['web'] . $domain->name . $this->directories['public'];
 
-            shell_exec($this->directories['bash'] . '/build_dirs.sh ' . $logDirectory . ' ' . $publicDirectory);
+            shell_exec($this->directories['bash'] . 'build_dirs.sh ' . $logDirectory . ' ' . $publicDirectory);
 
             if ($domain->is_word_press == 1) {
                 // grab the correct files
@@ -202,7 +202,7 @@ class InstallSite extends Command
                 $this->setReplaceReplaceValues($domain->name);
 
                 // install wordpress
-                shell_exec($this->directories['bash'] . '/wp_install.sh ' . $publicDirectory);
+                shell_exec($this->directories['bash'] . 'wp_install.sh ' . $publicDirectory);
 
                 // create the wordpress database and user
                 $wpConnection->statement('CREATE DATABASE :schema', ['schema' => $this->replaceReplaceValues[1]]);
@@ -234,7 +234,7 @@ class InstallSite extends Command
             fclose($phpFile);
 
             // create the user and add to www-data
-            shell_exec($this->directories['bash'] . '/create_users.sh ' . $domain->username . ' ' . $this->directories['web'] . $domain->name . ' ' . $domain->password);
+            shell_exec($this->directories['bash'] . 'create_users.sh ' . $domain->username . ' ' . $this->directories['web'] . $domain->name . ' ' . $domain->password);
 
             // soft-delete the record
             $domain->delete();
