@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return url('/home');
+    return redirect(url('/home'));
 });
 
 /*
