@@ -32,7 +32,7 @@ Route::group(['middleware' => ['web']], function () {
 Route::group(['middleware' => 'web'], function () {
     Route::auth();
 
-    Route::group(['middleware' => 'auth', function() {
+    Route::group(['middleware' => 'auth'], function() {
         Route::get('/home', 'HomeController@index');
 
         // Domain Routes
@@ -55,5 +55,5 @@ Route::group(['middleware' => 'web'], function () {
             'as'   => 'domain.destroy',
             'uses' => 'DomainController@destroy',
         ]);
-    }]);
+    });
 });
