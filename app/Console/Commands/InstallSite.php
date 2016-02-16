@@ -79,7 +79,7 @@ class InstallSite extends Command
     protected function setNginxConfigFile()
     {
         $nginxConfigFilename = $this->isWordPress ? env('TEMPLATE_SITE') : env('TEMPLATE_WP');
-        $this->nginxConfigFile = file_get_contents($this->directories['templates'] . '/' . $nginxConfigFilename);
+        $this->nginxConfigFile = file_get_contents($this->directories['templates'] . $nginxConfigFilename);
     }
 
     /**
@@ -88,7 +88,7 @@ class InstallSite extends Command
     protected function setPhpConfigFile()
     {
         $phpConfigFilename = env('TEMPLATE_PHP');
-        $this->phpConfigFile = file_get_contents($this->directories['php'] . '/' . $phpConfigFilename);
+        $this->phpConfigFile = file_get_contents($this->directories['php'] . $phpConfigFilename);
     }
 
     /**
@@ -160,14 +160,17 @@ class InstallSite extends Command
 
     protected function initCommand()
     {
+        // normalize the directories:
+        //  strip the last "/" in the event there is one, and add a new one,
+        //  guaranteeing all directory structures are the same
         $this->directories = [
-            'bash'      => env('DIRECTORY_BASH_SCRIPTS'),
-            'nginx'     => env('DIRECTORY_NGINX'),
-            'php'       => env('DIRECTORY_PHP'),
-            'templates' => env('DIRECTORY_TEMPLATES'),
-            'web'       => env('DIRECTORY_WEB'),
-            'public'    => env('DIRECTORY_PUBLIC'),
-            'logs'      => env('DIRECTORY_LOGS'),
+            'bash'      => rtrim(env('DIRECTORY_BASH_SCRIPTS'), '/') . '/',
+            'nginx'     => rtrim(env('DIRECTORY_NGINX'), '/') . '/',
+            'php'       => rtrim(env('DIRECTORY_PHP'), '/') . '/',
+            'templates' => rtrim(env('DIRECTORY_TEMPLATES'), '/') . '/',
+            'web'       => rtrim(env('DIRECTORY_WEB'), '/') . '/',
+            'public'    => rtrim(env('DIRECTORY_PUBLIC'), '/') . '/',
+            'logs'      => rtrim(env('DIRECTORY_LOGS'), '/') . '/',
         ];
     }
 
@@ -185,8 +188,8 @@ class InstallSite extends Command
 
         foreach ($domains as $domain) {
             // build the directories
-            $logDirectory = $this->directories['web'] . '/' . $domain->name . '/' . $this->directories['logs'];
-            $publicDirectory = $this->directories['web'] . '/' . $domain->name . '/' . $this->directories['public'];
+            $logDirectory = $this->directories['web'] . $domain->name . $this->directories['logs'];
+            $publicDirectory = $this->directories['web'] . $domain->name . $this->directories['public'];
 
             shell_exec($this->directories['bash'] . '/build_dirs.sh ' . $logDirectory . ' ' . $publicDirectory);
 
@@ -231,7 +234,7 @@ class InstallSite extends Command
             fclose($phpFile);
 
             // create the user and add to www-data
-            shell_exec($this->directories['bash'] . '/create_users.sh ' . $domain->username . ' ' . $this->directories['web'] . '/' . $domain->name . ' ' . $domain->password);
+            shell_exec($this->directories['bash'] . '/create_users.sh ' . $domain->username . ' ' . $this->directories['web'] . $domain->name . ' ' . $domain->password);
 
             // soft-delete the record
             $domain->delete();
