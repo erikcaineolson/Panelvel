@@ -2,7 +2,7 @@
 
 @section('content')
     @if(!isset($errors))
-        {{ $errors = null }}
+        {{ $errors = [] }}
     @endif
 
 <div class="container">
