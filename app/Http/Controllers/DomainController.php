@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\Models\Domain;
 use \Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
