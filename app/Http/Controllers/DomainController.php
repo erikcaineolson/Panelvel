@@ -24,7 +24,7 @@ class DomainController extends Controller
 
     public function index()
     {
-        $domains = Domain::all();
+        $domains = Domain::withTrashed();
 
         return response()->view('domains.index', [
             'domains' => $domains,
