@@ -26,7 +26,7 @@
                     <td class="text-center">{{ $domain->isWordPress ? 'Yes' : 'No' }}</td>
                     <td class="text-center">{{ $domain->createdAt }}</td>
                     <td class="text-center">{{ $domain->userId }}</td>
-                    <td class="text-center">{{ $domain->trashed() ? 'Created' : 'Queued' }}</td>
+                    <td class="text-center">{{ 'Queued' }}</td>
                 </tr>
             @endforeach
         @else
