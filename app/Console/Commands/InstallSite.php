@@ -96,7 +96,7 @@ class InstallSite extends Command
      */
     protected function setReplaceReplaceValues($domainName)
     {
-        if($this->isWordPress){
+        if ($this->isWordPress) {
             $this->setWpNonces();
 
             $this->replaceSearchValues = [
@@ -114,7 +114,7 @@ class InstallSite extends Command
                 $this->wpNonces[6],
                 $this->wpNonces[7],
             ];
-        }else{
+        } else {
             $this->replaceReplaceValues = [$domainName];
         }
     }
@@ -124,7 +124,7 @@ class InstallSite extends Command
      */
     protected function setReplaceSearchValues()
     {
-        if($this->isWordPress){
+        if ($this->isWordPress) {
             $this->replaceSearchValues = [
                 'SITE_NAME',
                 'database_name_here',
@@ -140,7 +140,7 @@ class InstallSite extends Command
                 'define(\'LOGGED_IN_SALT\',   \'put your unique phrase here\')',
                 'define(\'NONCE_SALT\',       \'put your unique phrase here\')',
             ];
-        }else{
+        } else {
             $this->replaceReplaceValues = ['SITE_NAME'];
         }
     }
@@ -190,7 +190,7 @@ class InstallSite extends Command
 
             shell_exec($this->directories['bash'] . '/build_dirs.sh ' . $logDirectory . ' ' . $publicDirectory);
 
-            if($domain->isWordPress){
+            if ($domain->is_word_press == 1) {
                 // grab the correct files
                 $this->isWordPress = true;
                 $this->setNginxConfigFile();
@@ -204,11 +204,11 @@ class InstallSite extends Command
                 // create the wordpress database and user
                 $wpConnection->statement('CREATE DATABASE :schema', ['schema' => $this->replaceReplaceValues[1]]);
                 $wpConnection->statement('GRANT ALL PRIVILEGES ON :schema TO :user AT :host IDENTIFIED BY :password', [
-                    'schema' => $this->replaceReplaceValues[1],
-                    'user' => $this->replaceReplaceValues[2],
+                    'schema'   => $this->replaceReplaceValues[1],
+                    'user'     => $this->replaceReplaceValues[2],
                     'password' => $this->replaceReplaceValues[3],
                 ]);
-            }else{
+            } else {
                 // grab the correct files
                 $this->isWordPress = false;
                 $this->setNginxConfigFile();
