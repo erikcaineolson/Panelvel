@@ -9,8 +9,8 @@
 
                 <div class="panel-body">
                     <ul>
-                        <li class="h3"><a href="{{ url('domain.create') }}">Create New Site</a></li>
-                        <li class="h3"><a href="{{ url('domain.index') }}">View Existing Sites</a></li>
+                        <li class="h3" style="list-style: none;"><a href="{{ route('domain.create') }}">Create New Site</a></li>
+                        <li class="h3" style="list-style: none;"><a href="{{ route('domain.index') }}">View Existing Sites</a></li>
                     </ul>
                 </div>
             </div>
