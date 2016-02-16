@@ -68,7 +68,7 @@ class DomainController extends Controller
         ]);
 
         $username = substr(str_replace('.', '', $input['domain_name']), 6) . date('ymd');
-        $password = string_random(12);
+        $password = str_random(12);
 
         try {
             $domain = Domain::create([
