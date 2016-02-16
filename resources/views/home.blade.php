@@ -8,7 +8,10 @@
                 <div class="panel-heading">Dashboard</div>
 
                 <div class="panel-body">
-                    You are logged in!
+                    <ul>
+                        <li class="h3"><a href="{{ url('domain.create') }}">Create New Site</a></li>
+                        <li class="h3"><a href="{{ url('domain.index') }}">View Existing Sites</a></li>
+                    </ul>
                 </div>
             </div>
         </div>

@@ -35,22 +35,22 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/home', 'HomeController@index');
 
     // Domain Routes
-    Route::get('/admin/domains', [
-        'as' => 'domain.index',
-        'DomainController@index',
+    Route::get('/domains', [
+        'as'   => 'domain.index',
+        'uses' => 'DomainController@index',
     ]);
 
-    Route::get('/admin/domain/new', [
+    Route::get('/domain/new', [
         'as'   => 'domain.create',
         'uses' => 'DomainController@create',
     ]);
 
-    Route::post('/admin/domain', [
+    Route::post('/domain', [
         'as'   => 'domain.store',
         'uses' => 'DomainController@store',
     ]);
 
-    Route::delete('/admin/domain/{domain}', [
+    Route::delete('/domain/{domain}', [
         'as'   => 'domain.destroy',
         'uses' => 'DomainController@destroy',
     ]);
