@@ -23,7 +23,7 @@
                     <td><a href="http://{{ $domain->name }}" target="_blank">{{ $domain->name }}</a></td>
                     <td>{{ $domain->username }}</td>
                     <td>{{ $domain->password }}</td>
-                    <td class="text-center">{{ $domain->isWordPress ? 'Yes' : 'No' }}</td>
+                    <td class="text-center">{{ $domain->isWordPress == 1 ? 'Yes' : 'No' }}</td>
                     <td class="text-center">{{ 'Queued' }}</td>
                 </tr>
             @endforeach

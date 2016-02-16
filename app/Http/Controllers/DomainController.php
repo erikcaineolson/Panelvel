@@ -71,7 +71,7 @@ class DomainController extends Controller
         $password = str_random(12);
 
         try {
-            $domain = Domain::create([
+            Domain::create([
                 'name'          => $input['domain_name'],
                 'is_word_press' => $input['is_word_press'],
                 'username'      => $username,
