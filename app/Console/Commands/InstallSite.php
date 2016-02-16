@@ -101,8 +101,8 @@ class InstallSite extends Command
 
             $this->replaceSearchValues = [
                 $domainName,
-                'wp_' . substr(str_replace('.', '', $domainName), 6) . date('ymd') . '_wp',
-                'wp_' . substr(str_replace('.', '', $domainName), 6) . date('ymd') . '_u',
+                'wp_' . substr(str_replace('.', '', $domainName), 6) . date('ymd'),
+                'wp_' . substr(str_replace('.', '', $domainName), 6) . date('ymd') . 'U',
                 '' . string_random(24),
                 env('WP_DB_HOSTNAME'),
                 $this->wpNonces[0],
@@ -185,8 +185,8 @@ class InstallSite extends Command
 
         foreach ($domains as $domain) {
             // build the directories
-            $logDirectory = $this->directories['web'] . '/' . $domain->username . '/' . $this->directories['logs'];
-            $publicDirectory = $this->directories['web'] . '/' . $domain->username . '/' . $this->directories['public'];
+            $logDirectory = $this->directories['web'] . '/' . $domain->name . '/' . $this->directories['logs'];
+            $publicDirectory = $this->directories['web'] . '/' . $domain->name . '/' . $this->directories['public'];
 
             shell_exec($this->directories['bash'] . '/build_dirs.sh ' . $logDirectory . ' ' . $publicDirectory);
 
@@ -229,6 +229,9 @@ class InstallSite extends Command
             $phpFile = fopen($this->directories['php'] . $domain->name . '.conf', 'w');
             fwrite($phpFile, $phpConfig);
             fclose($phpFile);
+
+            // create the user and add to www-data
+            shell_exec($this->directories['bash'] . '/create_users.sh ' . $domain->username . ' ' . $this->directories['web'] . '/' . $domain->name . ' ' . $domain->password);
 
             // soft-delete the record
             $domain->delete();
