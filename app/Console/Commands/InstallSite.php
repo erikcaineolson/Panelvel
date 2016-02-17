@@ -197,20 +197,22 @@ class InstallSite extends Command
             // check for WP and pull the proper template
             if ($domain->is_word_press) {
                 $this->isWordPress = true;
-                $nginxConfigTemplate = fopen($this->directories['templates'] . '/' . env('TEMPLATE_WP'), 'r');
+                $nginxConfigTemplateFile = $this->directories['templates'] . '/' . env('TEMPLATE_WP');
             } else {
                 $this->isWordPress = false;
-                $nginxConfigTemplate = fopen($this->directories['templates'] . '/' . env('TEMPLATE_SITE'), 'r');
+                $nginxConfigTemplateFile = $this->directories['templates'] . '/' . env('TEMPLATE_SITE');
             }
+
+            $nginxConfigTemplate = fopen($nginxConfigTemplateFile, 'r');
 
             // set search-and-replace
             $this->setReplaceSearchValues();
             $this->setReplaceReplaceValues($domain->name);
 
             // execute search-and-replace
-            $phpConfigFileTemplate = fread($phpConfigTemplate, filesize($phpConfigTemplate));
+            $phpConfigFileTemplate = fread($phpConfigTemplate, filesize($phpConfigTemplateFile));
             $phpConfigFile = str_replace($this->replaceSearchValues, $this->replaceReplaceValues, $phpConfigFileTemplate);
-            
+
             $nginxConfigFileTemplate = fread($nginxConfigTemplate, filesize($nginxConfigTemplate));
             $nginxConfigFile = str_replace($this->replaceSearchValues, $this->replaceReplaceValues, $nginxConfigFileTemplate);
 
