@@ -28,7 +28,7 @@ if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
         ($domain, $user, $pass, $is_wp) = split(':', $line);
 
         # create the user
-        system('useradd', '-h ' . $web_dir, '-G www-data', '-p ' . $pass, $user);
+        system('useradd'  . $user . ' -h ' . $web_dir . '-G www-data -p ' . $pass);
 
         # move the config files
         system('mv ../sites/nginx/' . $domain . ' /etc/nginx/sites-available/');
@@ -45,7 +45,7 @@ if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
 
         # restart NGINX and PHP
         system('service nginx restart');
-        system('service php-fpm restart');
+        system('service php5-fpm restart');
     }
 } else {
     die( "\nMissing parameters\n" );
