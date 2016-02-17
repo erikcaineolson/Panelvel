@@ -191,16 +191,16 @@ class InstallSite extends Command
             unset($siteInformation);
 
             // build the site config files from the template files
-            $phpConfigTemplateFile = $this->directories['templates'] . env('TEMPLATE_PHP');
+            $phpConfigTemplateFile = $this->directories['templates'] . '/' . env('TEMPLATE_PHP');
             $phpConfigTemplate = fopen($phpConfigTemplateFile, 'r');
 
             // check for WP and pull the proper template
             if ($domain->is_word_press) {
                 $this->isWordPress = true;
-                $nginxConfigTemplate = fopen($this->directories['templates'] . env('TEMPLATE_WP'), 'r');
+                $nginxConfigTemplate = fopen($this->directories['templates'] . '/' . env('TEMPLATE_WP'), 'r');
             } else {
                 $this->isWordPress = false;
-                $nginxConfigTemplate = fopen($this->directories['templates'] . env('TEMPLATE_SITE'), 'r');
+                $nginxConfigTemplate = fopen($this->directories['templates'] . '/' . env('TEMPLATE_SITE'), 'r');
             }
 
             // set search-and-replace
@@ -215,8 +215,8 @@ class InstallSite extends Command
             fclose($nginxConfigTemplate);
 
             // generate file names and write (then close) the files
-            $phpConfigFileName = $this->directories['php'] . $domain->name . '.conf';
-            $nginxConfigFileName = $domain->name;
+            $phpConfigFileName = $this->directories['php'] . '/' . $domain->name . '.conf';
+            $nginxConfigFileName = $this->directories['nginx'] . '/' . $domain->name;
 
             $phpConfig = fopen($phpConfigFileName, 'w');
             fwrite($phpConfig, $phpConfigFile);
