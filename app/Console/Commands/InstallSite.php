@@ -164,13 +164,10 @@ class InstallSite extends Command
         //  strip the last "/" in the event there is one, and add a new one,
         //  guaranteeing all directory structures are the same
         $this->directories = [
-            'bash'      => env('DIRECTORY_BASH_SCRIPTS'),
-            'nginx'     => env('DIRECTORY_NGINX'),
-            'php'       => env('DIRECTORY_PHP'),
-            'templates' => env('DIRECTORY_TEMPLATES'),
-            'web'       => env('DIRECTORY_WEB'),
-            'public'    => env('DIRECTORY_PUBLIC'),
-            'logs'      => env('DIRECTORY_LOGS'),
+            'list'      => storage_path('sites/list.txt'),
+            'nginx'     => storage_path('sites/nginx'),
+            'php'       => storage_path('sites/php'),
+            'templates' => storage_path('templates'),
         ];
     }
 
@@ -181,63 +178,62 @@ class InstallSite extends Command
     {
         $this->initCommand();
 
+        // open the site list
+        $siteList = fopen($this->directories['list'], 'w');
+
         // build a connection to the wordpress database
         $wpConnection = DB::connection('wp_mysql');
 
         $domains = Domain::all();
 
         foreach ($domains as $domain) {
-            // build the directories
-            $logDirectory = $this->directories['web'] . $domain->name . $this->directories['logs'];
-            $publicDirectory = $this->directories['web'] . $domain->name . $this->directories['public'];
+            // clear the site information string
+            unset($siteInformation);
 
-            shell_exec($this->directories['bash'] . 'build_dirs.sh ' . $logDirectory . ' ' . $publicDirectory);
+            // build the site config files from the template files
+            $phpConfigTemplateFile = $this->directories['templates'] . env('TEMPLATE_PHP');
+            $phpConfigTemplate = fopen($phpConfigTemplateFile, 'r');
 
-            if ($domain->is_word_press == 1) {
-                // grab the correct files
+            // check for WP and pull the proper template
+            if ($domain->is_word_press) {
                 $this->isWordPress = true;
-                $this->setNginxConfigFile();
-                $this->setPhpConfigFile();
-                $this->setReplaceSearchValues();
-                $this->setReplaceReplaceValues($domain->name);
-
-                // install wordpress
-                shell_exec($this->directories['bash'] . 'wp_install.sh ' . $publicDirectory);
-
-                // create the wordpress database and user
-                $wpConnection->statement('CREATE DATABASE :schema', ['schema' => $this->replaceReplaceValues[1]]);
-                $wpConnection->statement('GRANT ALL PRIVILEGES ON :schema TO :user AT :host IDENTIFIED BY :password', [
-                    'schema'   => $this->replaceReplaceValues[1],
-                    'user'     => $this->replaceReplaceValues[2],
-                    'password' => $this->replaceReplaceValues[3],
-                ]);
+                $nginxConfigTemplate = fopen($this->directories['templates'] . env('TEMPLATE_WP'), 'r');
             } else {
-                // grab the correct files
                 $this->isWordPress = false;
-                $this->setNginxConfigFile();
-                $this->setPhpConfigFile();
-                $this->setReplaceSearchValues();
-                $this->setReplaceReplaceValues($domain->name);
+                $nginxConfigTemplate = fopen($this->directories['templates'] . env('TEMPLATE_SITE'), 'r');
             }
 
-            // modify the nginx and php config files
-            $nginxConfig = str_replace($this->replaceSearchValues, $this->replaceReplaceValues, $this->nginxConfigFile);
-            $phpConfig = str_replace($this->replaceSearchValues, $this->replaceReplaceValues, $this->phpConfigFile);
+            // set search-and-replace
+            $this->setReplaceSearchValues();
+            $this->setReplaceReplaceValues($domain->name);
 
-            // write the nginx and php config files
-            $nginxFile = fopen($this->directories['nginx'] . $domain->name, 'w');
-            fwrite($nginxFile, $nginxConfig);
-            fclose($nginxFile);
+            // execute search-and-replace
+            $phpConfigFile = str_replace($this->replaceSearchValues, $this->replaceReplaceValues, fread($phpConfigTemplate, strlen($phpConfigTemplate)));
+            $nginxConfigFile = str_replace($this->replaceSearchValues, $this->replaceReplaceValues, fread($nginxConfigTemplate, strlen($nginxConfigTemplate)));
 
-            $phpFile = fopen($this->directories['php'] . $domain->name . '.conf', 'w');
-            fwrite($phpFile, $phpConfig);
-            fclose($phpFile);
+            fclose($phpConfigTemplate);
+            fclose($nginxConfigTemplate);
 
-            // create the user and add to www-data
-            shell_exec($this->directories['bash'] . 'create_users.sh ' . $domain->username . ' ' . $this->directories['web'] . $domain->name . ' ' . $domain->password);
+            // generate file names and write (then close) the files
+            $phpConfigFileName = $this->directories['php'] . $domain->name . '.conf';
+            $nginxConfigFileName = $domain->name;
 
-            // soft-delete the record
-            $domain->delete();
+            $phpConfig = fopen($phpConfigFileName, 'w');
+            fwrite($phpConfig, $phpConfigFile);
+            fclose($phpConfig);
+
+            $nginxConfig = fopen($nginxConfigFileName, 'w');
+            fwrite($nginxConfig, $nginxConfigFile);
+            fclose($nginxConfig);
+
+            // build the site information string
+            //  format: domain name:username:password:is WP
+            //  should be: domain.com:domauser:d0m4inP4$s!:true
+            $siteInformation = '' . $domain->name . ':' . $domain->username . ':' . $domain->password . ':' . (bool)$domain->is_word_press . "\n";
+
+            fwrite($siteList, $siteInformation);
         }
+
+        fclose($siteList);
     }
 }
