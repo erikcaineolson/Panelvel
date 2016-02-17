@@ -10,6 +10,8 @@ use App\User;
  */
 class Domain extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'name',
         'is_word_press',
