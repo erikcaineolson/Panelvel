@@ -92,7 +92,7 @@ class InstallSite extends Command
     }
 
     /**
-     * Set replacement values
+     * @param $domainName
      */
     protected function setReplaceReplaceValues($domainName)
     {
@@ -105,14 +105,7 @@ class InstallSite extends Command
                 'wp_' . substr(str_replace('.', '', $domainName), 6) . date('ymd') . 'U',
                 '' . str_random(24),
                 env('WP_DB_HOSTNAME'),
-                $this->wpNonces[0],
-                $this->wpNonces[1],
-                $this->wpNonces[2],
-                $this->wpNonces[3],
-                $this->wpNonces[4],
-                $this->wpNonces[5],
-                $this->wpNonces[6],
-                $this->wpNonces[7],
+                str_random(32),
             ];
         } else {
             $this->replaceReplaceValues = [$domainName];
@@ -131,14 +124,7 @@ class InstallSite extends Command
                 'username_here',
                 'password_here',
                 'localhost',
-                'define(\'AUTH_KEY\',         \'put your unique phrase here\')',
-                'define(\'SECURE_AUTH_KEY\',  \'put your unique phrase here\')',
-                'define(\'LOGGED_IN_KEY\',    \'put your unique phrase here\')',
-                'define(\'NONCE_KEY\',        \'put your unique phrase here\')',
-                'define(\'AUTH_SALT\',        \'put your unique phrase here\')',
-                'define(\'SECURE_AUTH_SALT\', \'put your unique phrase here\')',
-                'define(\'LOGGED_IN_SALT\',   \'put your unique phrase here\')',
-                'define(\'NONCE_SALT\',       \'put your unique phrase here\')',
+                'put your unique phrase here',
             ];
         } else {
             $this->replaceReplaceValues = ['SITE_NAME'];
