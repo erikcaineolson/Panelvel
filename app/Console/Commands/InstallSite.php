@@ -103,7 +103,7 @@ class InstallSite extends Command
                 $domainName,
                 'wp_' . substr(str_replace('.', '', $domainName), 6) . date('ymd'),
                 'wp_' . substr(str_replace('.', '', $domainName), 6) . date('ymd') . 'U',
-                '' . string_random(24),
+                '' . str_random(24),
                 env('WP_DB_HOSTNAME'),
                 $this->wpNonces[0],
                 $this->wpNonces[1],
