@@ -208,8 +208,8 @@ class InstallSite extends Command
             $this->setReplaceReplaceValues($domain->name);
 
             // execute search-and-replace
-            $phpConfigFile = str_replace($this->replaceSearchValues, $this->replaceReplaceValues, fread($phpConfigTemplate, strlen($phpConfigTemplate)));
-            $nginxConfigFile = str_replace($this->replaceSearchValues, $this->replaceReplaceValues, fread($nginxConfigTemplate, strlen($nginxConfigTemplate)));
+            $phpConfigFile = str_replace($this->replaceSearchValues, $this->replaceReplaceValues, fread($phpConfigTemplate, filesize($phpConfigTemplate)));
+            $nginxConfigFile = str_replace($this->replaceSearchValues, $this->replaceReplaceValues, fread($nginxConfigTemplate, filesize($nginxConfigTemplate)));
 
             fclose($phpConfigTemplate);
             fclose($nginxConfigTemplate);
