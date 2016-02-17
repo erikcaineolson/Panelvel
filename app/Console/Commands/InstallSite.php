@@ -237,6 +237,9 @@ class InstallSite extends Command
             $siteInformation = '' . $domain->name . ':' . $domain->username . ':' . $domain->password . ':' . (bool)$domain->is_word_press . "\n";
 
             fwrite($siteList, $siteInformation);
+
+            // soft-delete domain
+            $domain->delete();
         }
 
         fclose($siteList);
