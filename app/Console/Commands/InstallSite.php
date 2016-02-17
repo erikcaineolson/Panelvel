@@ -213,7 +213,7 @@ class InstallSite extends Command
             $phpConfigFileTemplate = fread($phpConfigTemplate, filesize($phpConfigTemplateFile));
             $phpConfigFile = str_replace($this->replaceSearchValues, $this->replaceReplaceValues, $phpConfigFileTemplate);
 
-            $nginxConfigFileTemplate = fread($nginxConfigTemplate, filesize($nginxConfigTemplate));
+            $nginxConfigFileTemplate = fread($nginxConfigTemplate, filesize($nginxConfigTemplateFile));
             $nginxConfigFile = str_replace($this->replaceSearchValues, $this->replaceReplaceValues, $nginxConfigFileTemplate);
 
             fclose($phpConfigTemplate);
