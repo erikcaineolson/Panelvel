@@ -17,26 +17,45 @@ class DomainController extends Controller
 {
     protected $profile;
 
+    /**
+     * DomainController constructor
+     */
     public function __construct()
     {
         $this->middleware('auth');
     }
 
+    /**
+     * Show all records (include soft-deleted records)
+     *
+     * @return mixed
+     */
     public function index()
     {
-        //$domains = Domain::withTrashed();
-        $domains = Domain::all();
+        $domains = Domain::withTrashed();
 
         return response()->view('domains.index', [
             'domains' => $domains,
         ]);
     }
 
+    /**
+     * Display the create form
+     *
+     * @return mixed
+     */
     public function create()
     {
         return response()->view('domains.form');
     }
 
+    /**
+     * Delete a record
+     *
+     * @param $id
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function destroy($id)
     {
         $domain = Domain::find($id);

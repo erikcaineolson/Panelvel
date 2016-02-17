@@ -24,7 +24,7 @@
                     <td>{{ $domain->username }}</td>
                     <td>{{ $domain->password }}</td>
                     <td class="text-center">{{ $domain->is_word_press == 1 ? 'Yes' : 'No' }}</td>
-                    <td class="text-center">{{ 'Queued' }}</td>
+                    <td class="text-center">{{ $domain->trashed() ? 'Completed' : 'Queued' }}</td>
                 </tr>
             @endforeach
         @else
