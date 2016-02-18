@@ -54,9 +54,6 @@ class InstallSite extends Command
         // open the site list
         $siteList = fopen($this->directories['list'], 'w');
 
-        // build a connection to the wordpress database
-        $wpConnection = DB::connection('wp_mysql');
-
         $domains = Domain::all();
 
         foreach ($domains as $domain) {
@@ -78,18 +75,6 @@ class InstallSite extends Command
                 $databaseName = 'wp_' . substr(str_replace('.', '', $domain->name), 0, 6) . date('ynj');
                 $databaseUsername = 'wpu_' . substr(str_replace('.', '', $domain->name), 0, 6) . date('ynj');
                 $databasePassword = '' . str_random(24);
-
-                // create the database
-                $wpConnection->raw('CREATE DATABASE :databaseName', [
-                    'databaseName' => $databaseName,
-                ]);
-
-                // create the database user
-                $wpConnection->raw('GRANT ALL PRIVILEGES ON :databaseName TO :userName IDENTIFIED BY :userPass', [
-                    'databaseName' => $databaseName . '.*',
-                    'userName'     => $databaseUsername,
-                    'userPass'     => $databasePassword,
-                ]);
             } else {
                 $nginxConfigTemplateFile = $this->directories['templates'] . '/' . env('TEMPLATE_SITE');
             }

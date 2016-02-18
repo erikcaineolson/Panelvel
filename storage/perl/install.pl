@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use DBI;
 
 my $in_file;
 my $web_dir;
@@ -12,6 +13,9 @@ my $domain;
 my $user;
 my $pass;
 my $is_wp;
+my $wp_db;
+my $wp_db_user;
+my $wp_db_pass;
 
 if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
     $in_file = $ARGV[0];
@@ -25,7 +29,7 @@ if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
     foreach $line (@lines)
     {
         # break up the line into components
-        ($domain, $user, $pass, $is_wp) = split(':', $line);
+        ($domain, $user, $pass, $is_wp, $wp_db, $wp_db_user, $wp_db_pass) = split(':', $line);
 
         # create the user
         system('useradd'  . $user . ' -h ' . $web_dir . '-G www-data -p ' . $pass);

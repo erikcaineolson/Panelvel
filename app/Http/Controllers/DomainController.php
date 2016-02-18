@@ -86,14 +86,13 @@ class DomainController extends Controller
             'is_word_press',
         ]);
 
-        $username = substr(str_replace('.', '', $input['domain_name']), 0, 6) . date('ymd');
         $password = str_random(12);
 
         try {
             Domain::create([
                 'name'          => $input['domain_name'],
                 'is_word_press' => $input['is_word_press'],
-                'username'      => $username,
+                'username'      => $input['domain_name'],
                 'password'      => $password,
                 'user_id'       => Auth::user()->id,
             ]);
