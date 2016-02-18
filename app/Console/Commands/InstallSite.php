@@ -31,119 +31,6 @@ class InstallSite extends Command
      */
     protected $directories;
 
-    /**
-     * Is this a WP site?
-     *
-     * @var bool
-     */
-    protected $isWordPress;
-
-    /**
-     * Holds the contents of the NGINX config file
-     *
-     * @var string
-     */
-    protected $nginxConfigFile;
-
-    /**
-     * Holds the contents of the PHP config file
-     *
-     * @var string
-     */
-    protected $phpConfigFile;
-
-    /**
-     * Contains the search values to replace with
-     *
-     * @var array
-     */
-    protected $replaceReplaceValues;
-
-    /**
-     * Contains the search values to replace
-     *
-     * @var array
-     */
-    protected $replaceSearchValues;
-
-    /**
-     * The authorization keys retrieved via WP API
-     *
-     * @var array
-     */
-    protected $wpNonces;
-
-    /**
-     * Set NGINX config file
-     */
-    protected function setNginxConfigFile()
-    {
-        $nginxConfigFilename = $this->isWordPress ? env('TEMPLATE_SITE') : env('TEMPLATE_WP');
-        $this->nginxConfigFile = file_get_contents($this->directories['templates'] . $nginxConfigFilename);
-    }
-
-    /**
-     * Set PHP config file
-     */
-    protected function setPhpConfigFile()
-    {
-        $phpConfigFilename = env('TEMPLATE_PHP');
-        $this->phpConfigFile = file_get_contents($this->directories['nginx'] . $phpConfigFilename);
-    }
-
-    /**
-     * @param $domainName
-     */
-    protected function setReplaceReplaceValues($domainName)
-    {
-        if ($this->isWordPress) {
-            $this->setWpNonces();
-
-            $this->replaceSearchValues = [
-                $domainName,
-                'wp_' . substr(str_replace('.', '', $domainName), 6) . date('ymd'),
-                'wp_' . substr(str_replace('.', '', $domainName), 6) . date('ymd') . 'U',
-                '' . str_random(24),
-                env('WP_DB_HOSTNAME'),
-                str_random(32),
-            ];
-        } else {
-            $this->replaceReplaceValues = [$domainName];
-        }
-    }
-
-    /**
-     * Set search values
-     */
-    protected function setReplaceSearchValues()
-    {
-        if ($this->isWordPress) {
-            $this->replaceSearchValues = [
-                'SITE_NAME',
-                'database_name_here',
-                'username_here',
-                'password_here',
-                'localhost',
-                'put your unique phrase here',
-            ];
-        } else {
-            $this->replaceReplaceValues = ['SITE_NAME'];
-        }
-    }
-
-    /**
-     * Set WP Nonces/Authentications
-     */
-    protected function setWpNonces()
-    {
-        $wpAuth = file_get_contents(env('WP_AUTH_KEY_URL'));
-        $wpNonces = explode(';', $wpAuth);
-
-        foreach ($wpNonces as $wpNonce) {
-            $this->wpNonces[] = $wpNonce . ';';
-        }
-    }
-
     protected function initCommand()
     {
         // normalize the directories:
@@ -174,7 +61,10 @@ class InstallSite extends Command
 
         foreach ($domains as $domain) {
             // clear the site information string
-            unset($siteInformation);
+            unset($siteInformation, $databaseName);
+
+            // clear database username and password values
+            $databaseName = $databaseUsername = $databasePassword = '';
 
             // build the site config files from the template files
             $phpConfigTemplateFile = $this->directories['templates'] . '/' . env('TEMPLATE_PHP');
@@ -182,25 +72,32 @@ class InstallSite extends Command
 
             // check for WP and pull the proper template
             if ($domain->is_word_press) {
-                $this->isWordPress = true;
                 $nginxConfigTemplateFile = $this->directories['templates'] . '/' . env('TEMPLATE_WP');
+
+                // generate the database username and password
+                $databaseName = 'wp_' . substr(str_replace('.', '', $domain->name), 0, 6) . date('ynj');
+                $databaseUsername = 'wpu_' . substr(str_replace('.', '', $domain->name), 0, 6) . date('ynj');
+                $databasePassword = '' . str_random(24);
+
+                // create the database
+                $wpConnection->raw('CREATE DATABASE :databaseName', [
+                    'databaseName' => $databaseName,
+                ]);
+
+                // create the database user
+                $wpConnection->raw('GRANT ALL PRIVILEGES ON :databaseName TO :userName IDENTIFIED BY :userPass', [
+                    'databaseName' => $databaseName . '.*',
+                    'userName'     => $databaseUsername,
+                    'userPass'     => $databasePassword,
+                ]);
             } else {
-                $this->isWordPress = false;
                 $nginxConfigTemplateFile = $this->directories['templates'] . '/' . env('TEMPLATE_SITE');
             }
 
             $nginxConfigTemplate = fopen($nginxConfigTemplateFile, 'r');
 
-            // set search-and-replace
-            $this->setReplaceSearchValues();
-            $this->setReplaceReplaceValues($domain->name);
-
-            // execute search-and-replace
-            $phpConfigFileTemplate = fread($phpConfigTemplate, filesize($phpConfigTemplateFile));
-            $phpConfigFile = str_replace($this->replaceSearchValues, $this->replaceReplaceValues, $phpConfigFileTemplate);
-
-            $nginxConfigFileTemplate = fread($nginxConfigTemplate, filesize($nginxConfigTemplateFile));
-            $nginxConfigFile = str_replace($this->replaceSearchValues, $this->replaceReplaceValues, $nginxConfigFileTemplate);
+            $phpConfigContents = fread($phpConfigTemplate, filesize($phpConfigTemplateFile));
+            $nginxConfigContents = fread($nginxConfigTemplate, filesize($nginxConfigTemplateFile));
 
             fclose($phpConfigTemplate);
             fclose($nginxConfigTemplate);
@@ -210,17 +107,17 @@ class InstallSite extends Command
             $nginxConfigFileName = $this->directories['nginx'] . '/' . $domain->name;
 
             $phpConfig = fopen($phpConfigFileName, 'w');
-            fwrite($phpConfig, $phpConfigFile);
+            fwrite($phpConfig, $phpConfigContents);
             fclose($phpConfig);
 
             $nginxConfig = fopen($nginxConfigFileName, 'w');
-            fwrite($nginxConfig, $nginxConfigFile);
+            fwrite($nginxConfig, $nginxConfigContents);
             fclose($nginxConfig);
 
             // build the site information string
             //  format: domain name:username:password:is WP
             //  should be: domain.com:domauser:d0m4inP4$s!:true
-            $siteInformation = '' . $domain->name . ':' . $domain->username . ':' . $domain->password . ':' . (int)$domain->is_word_press . "\n";
+            $siteInformation = '' . $domain->name . ':' . $domain->username . ':' . $domain->password . ':' . (int)$domain->is_word_press . ':' . $databaseName . ':' . $databaseUsername . ':' . $databasePassword . "\n";
 
             fwrite($siteList, $siteInformation);
 
