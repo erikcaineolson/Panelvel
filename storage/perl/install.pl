@@ -44,5 +44,5 @@ if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
         system($storage_dir . '/bash/new_site.sh', $domain, $site_type, $pass, $wp_db, $wp_db_pass);
     }
 } else {
-    die( "\nMissing parameters\ninstall.pl /path/to/website/list /path/to/web/main/home/ /path/to/panelvel/storage/" );
+    die( "\nMissing parameters\ninstall.pl /path/to/website/list /path/to/panelvel/storage/" );
 }

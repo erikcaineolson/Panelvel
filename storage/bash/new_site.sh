@@ -41,11 +41,11 @@ fi
 
 # copy proper php config file and replace values
 cp /etc/nginx/templates/php /etc/php5/fpm/pool.d/$1.conf
-sed -i "s@$2@$1@g" /etc/php5/fpm/pool.d/$1.conf
+sed -i "s@SITE_NAME@$1@g" /etc/php5/fpm/pool.d/$1.conf
 
 # copy proper nginx config file, and replace values
 cp /etc/nginx/templates/$2 /etc/nginx/sites-available/$1
-sed -i "s@$2@$1@g" /etc/nginx/sites-available/$1
+sed -i "s@SITE_NAME@$1@g" /etc/nginx/sites-available/$1
 
 # create symbolic link
 ln -s /etc/nginx/sites-available/$1 /etc/nginx/sites-enabled
@@ -60,10 +60,10 @@ useradd $1 -d /var/www/$1
 # set ftp user password
 echo $1:$PASSWORD | chpasswd
 
+# append the ch script
+echo "chown $1:www-data /var/www/$1" >> /var/www/ch
+
 # change ownership and restart nginx and php
 chown $1:www-data -R /var/www/*
 service nginx restart
 service php5-fpm restart
-
-# append the ch script
-echo "chown $1:www-data /var/www/$1" >> /var/www/ch
