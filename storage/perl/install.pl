@@ -45,8 +45,7 @@ if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
     foreach $line (@lines)
     {
         # break up the line into components
-        ($domain, $user, $pass, $is_wp, $wp_db, $wp_db_user, $wp_db_pass, $nonce_0, $nonce_1, $nonce_2, $nonce_3, $nonce_4, $nonce_5, $nonce_6, $nonce_7) = split(':', $line);
-        @nonces = [$nonce_0, $nonce_1, $nonce_2, $nonce_3, $nonce_4, $nonce_5, $nonce_6, $nonce_7];
+        ($domain, $user, $pass, $is_wp, $wp_db, $wp_db_user, $wp_db_pass) = split(':', $line);
 
         # create the user
         system('useradd'  . $user . ' -h ' . $web_dir . '/' . $user . ' -G www-data -p ' . $pass);
