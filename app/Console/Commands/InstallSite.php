@@ -72,8 +72,8 @@ class InstallSite extends Command
                 $nginxConfigTemplateFile = $this->directories['templates'] . '/' . env('TEMPLATE_WP');
 
                 // generate the database username and password
-                $databaseName = 'wp_' . substr(str_replace('.', '', $domain->name), 0, 6) . date('ynj');
-                $databaseUsername = 'wpu_' . substr(str_replace('.', '', $domain->name), 0, 6) . date('ynj');
+                $databaseName = substr(str_replace('.', '', $domain->name), 0, 6) . date('ynj') . '_wp';
+                $databaseUsername = substr(str_replace('.', '', $domain->name), 0, 6) . date('ynj') . '_wp';
                 $databasePassword = '' . str_random(24);
             } else {
                 $nginxConfigTemplateFile = $this->directories['templates'] . '/' . env('TEMPLATE_SITE');
