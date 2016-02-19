@@ -116,6 +116,9 @@ if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
             close(WP_CONFIG_SAMPLE);
         }
 
+        # change ownership
+        system('chown www-data:www-data ' . $web_dir . '/' . $user);
+
         # restart NGINX and PHP
         system('service nginx restart');
         system('service php5-fpm restart');
