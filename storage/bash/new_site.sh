@@ -25,12 +25,14 @@ mount --bind /srv/sftp/$1/web /var/www/$1
 if [ $2 = "wordpress" ]
     then
         # download a fresh copy of wordpress, gunzip and untar it
-        wget https://wordpress.org/latest.tar.gz -O /var/www/$1/public_html/
+        wget https://wordpress.org/latest.tar.gz
         sleep 10
-        tar -xf /var/www/$1/public_html/latest.tar.gz -C /var/www/$1/public_html/
         # clean up the WP install (move files out of /wordpress and get rid of the /wordpress folder)
-        mv /var/www/$1/public_html/wordpress/* /var/www/$1/public_html/
-        rmdir /var/www/$1/public_html/wordpress
+        tar -xf latest.tar.gz #/var/www/$1/public_html/latest.tar.gz -C /var/www/$1/public_html/
+        rm -f latest.tar.gz
+        mv wordpress/* /var/www/$1/public_html/
+        rmdir wordpress
+
         # make replacements in wordpress config file
         sed -i "s@wp_db_name@$DB_NAME@g" /var/www/$1/public_html/wp-config-sample.php
         sed -i "s@wp_db_user@$DB_NAME@g" /var/www/$1/public_html/wp-config-sample.php
