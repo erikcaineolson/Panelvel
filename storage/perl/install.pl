@@ -48,7 +48,7 @@ if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
         ($domain, $user, $pass, $is_wp, $wp_db, $wp_db_user, $wp_db_pass) = split(':', $line);
 
         # create the user
-        system('useradd'  . $user . ' -h ' . $web_dir . '/' . $user . ' -G www-data -p ' . $pass);
+        system('useradd '  . $user . ' -h ' . $web_dir . '/' . $user . ' -G www-data -p ' . $pass);
 
         # create the user's SFTP directory
         system('mkdir -p /srv/sftp/' . $user . '/web');
@@ -91,8 +91,8 @@ if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
         # if it's wordpress, install wordpress
         if($is_wp == 1){
             system('wget ' . $wp_source . ' -O ' . $web_dir . '/' . $user . '/public_html/latest.tar.gz');
-            system('tar -xf ' . $web_dir . '/' . $user . '/public_html/latest.tar.gz');
-            system('mv ' . $web_dir . '/' . $user . '/public_html/latest.tar.gz/* ../');
+            system('tar -xf ' . $web_dir . '/' . $user . '/public_html/latest.tar.gz ' . $web_dir . '/' . $user . '/public_html/');
+            system('mv ' . $web_dir . '/' . $user . '/public_html/latest.tar.gz/* ' . $web_dir . '/' . $user . '/');
             system('rmdir ' . $web_dir . '/' . $user . '/public_html/wordpress');
 
             open(WP_CONFIG_SAMPLE, '<', $web_dir . '/' . $user . '/public_html/wordpress/wp-config-sample.php');
