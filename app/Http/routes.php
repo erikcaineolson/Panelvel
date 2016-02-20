@@ -30,9 +30,9 @@ Route::group(['middleware' => ['web']], function () {
 });
 
 Route::group(['middleware' => 'web'], function () {
-    Route::auth();
-
     Route::any('/auth/register', 'HomeController@index');
+
+    Route::auth();
 
     Route::get('/home', 'HomeController@index');
 
