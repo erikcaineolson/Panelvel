@@ -63,41 +63,13 @@ class InstallSite extends Command
             // clear database username and password values
             $databaseName = $databaseUsername = $databasePassword = '';
 
-            // build the site config files from the template files
-            $phpConfigTemplateFile = $this->directories['templates'] . '/' . env('TEMPLATE_PHP');
-            $phpConfigTemplate = fopen($phpConfigTemplateFile, 'r');
-
             // check for WP and pull the proper template
             if ($domain->is_word_press) {
-                $nginxConfigTemplateFile = $this->directories['templates'] . '/' . env('TEMPLATE_WP');
-
                 // generate the database username and password
                 $databaseName = substr(str_replace('.', '', $domain->name), 0, 6) . date('ynj') . '_wp';
                 $databaseUsername = substr(str_replace('.', '', $domain->name), 0, 6) . date('ynj') . '_wp';
                 $databasePassword = '' . str_random(24);
-            } else {
-                $nginxConfigTemplateFile = $this->directories['templates'] . '/' . env('TEMPLATE_SITE');
             }
-
-            $nginxConfigTemplate = fopen($nginxConfigTemplateFile, 'r');
-
-            $phpConfigContents = fread($phpConfigTemplate, filesize($phpConfigTemplateFile));
-            $nginxConfigContents = fread($nginxConfigTemplate, filesize($nginxConfigTemplateFile));
-
-            fclose($phpConfigTemplate);
-            fclose($nginxConfigTemplate);
-
-            // generate file names and write (then close) the files
-            $phpConfigFileName = $this->directories['php'] . '/' . $domain->name . '.conf';
-            $nginxConfigFileName = $this->directories['nginx'] . '/' . $domain->name;
-
-            $phpConfig = fopen($phpConfigFileName, 'w');
-            fwrite($phpConfig, $phpConfigContents);
-            fclose($phpConfig);
-
-            $nginxConfig = fopen($nginxConfigFileName, 'w');
-            fwrite($nginxConfig, $nginxConfigContents);
-            fclose($nginxConfig);
 
             // build the site information string
             //  format: domain name:username:password:is WP

@@ -21,7 +21,7 @@ my $wp_db = '';
 my $wp_db_user = '';
 my $wp_db_pass = '';
 
-if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
+if (@ARGV && $ARGV[0] ne = '') {
     $in_file = $ARGV[0];
     $storage_dir = $ARGV[1];
 
@@ -44,5 +44,5 @@ if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
         system($storage_dir . '/bash/new_site.sh', $domain, $site_type, $pass, $wp_db, $wp_db_pass);
     }
 } else {
-    die( "\nMissing parameters\ninstall.pl /path/to/website/list /path/to/panelvel/storage/" );
+    die( "\nMissing parameters\ninstall.pl /path/to/website/list" );
 }
