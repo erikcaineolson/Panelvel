@@ -13,6 +13,9 @@ DB_PASSWORD=${4:-0} # set a default zero value if none exists
 DB_NAME=${3:-0}
 DB_NAME+="_wp";
 
+# no matter anything else, we'll need this directory
+mkdir -p /var/www/$1/public_html
+
 if [ $2 = "wordpress" ]
     then
         # download a fresh copy of wordpress, gunzip and untar it
@@ -41,7 +44,7 @@ sed -i "s@$2@$1@g" /etc/nginx/sites-available/$1
 ln -s /etc/nginx/sites-available/$1 /etc/nginx/sites-enabled
 
 # make all sites secure
-cp /etc/nginx/snippets/ssl-snakeoil.conf /etc/nginx/snippets/ssl-$1.conf
+cp /etc/nginx/snippets/snakeoil.conf /etc/nginx/snippets/ssl-$1.conf
 sed -i "s@snakeoil@$1@" /etc/nginx/snippets/ssl-$1.conf
 
 # change ownership and restart nginx and php
