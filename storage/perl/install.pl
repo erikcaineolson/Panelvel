@@ -33,16 +33,20 @@ if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
         # break up the line into components
         ($domain, $is_wp, $wp_db, $wp_db_user, $wp_db_pass, $wp_db_host) = split(':', $line);
 
-        if($is_wp == 1 || $is_wp eq '1'){
-            $site_type = 'wordpress';
-        }else{
-            $site_type = 'secure_site';
+        if($domain ne ''){
+            if($is_wp == 1 || $is_wp eq '1'){
+                $site_type = 'wordpress';
+            }else{
+                $site_type = 'secure_site';
+            }
+
+            # build the database
+            system('python', $storage_dir . '/python/create_db.py', $wp_db, $wp_db_user, $wp_db_pass, $wp_db_host);
+
+            system($storage_dir . '/bash/new_site.sh', $domain, $site_type, $wp_db, $wp_db_pass);
+
+            system('echo "" > ' . $in_file);
         }
-
-        # build the database
-        system('python', $storage_dir . '/python/create_db.py', '$wp_db', '$wp_db_user', '$wp_db_pass', '$wp_db_host');
-
-        system($storage_dir . '/bash/new_site.sh', $domain, $site_type, $wp_db, $wp_db_pass);
     }
 } else {
     die( "\nMissing parameters\ninstall.pl /path/to/website/list /path/to/Panelvel/storage" );
