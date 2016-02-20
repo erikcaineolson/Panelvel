@@ -33,7 +33,7 @@ class DomainController extends Controller
      */
     public function index()
     {
-        $domains = Domain::withTrashed();
+        $domains = Domain::withTrashed()->get();
 
         return response()->view('domains.index', [
             'domains' => $domains,

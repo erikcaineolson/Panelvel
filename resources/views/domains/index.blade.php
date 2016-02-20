@@ -9,8 +9,6 @@
         <tr>
             <th>ID</th>
             <th>Domain Name</th>
-            <th>Username</th>
-            <th>Password</th>
             <th>WordPress</th>
             <th>Status</th>
         </tr>
