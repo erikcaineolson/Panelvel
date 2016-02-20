@@ -21,8 +21,6 @@
                 <tr>
                     <td class="text-center">{{ $domain->id }}</td>
                     <td><a href="http://{{ $domain->name }}" target="_blank">{{ $domain->name }}</a></td>
-                    <td>{{ $domain->username }}</td>
-                    <td>{{ $domain->password }}</td>
                     <td class="text-center">{{ $domain->is_word_press == 1 ? 'Yes' : 'No' }}</td>
                     <td class="text-center">{{ $domain->trashed() ? 'Completed' : 'Queued' }}</td>
                 </tr>

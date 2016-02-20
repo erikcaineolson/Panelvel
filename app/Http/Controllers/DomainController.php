@@ -5,6 +5,7 @@ use App\Models\Domain;
 use \Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -98,6 +99,8 @@ class DomainController extends Controller
             ]);
 
             $request->session()->flash('success', $input['domain_name'] . ' has been created!');
+
+            Artisan::call('install-site');
         } catch (Exception $e) {
             $request->session()->flash('danger', $input['domain_name'] . ' was not created, please try again.');
         }
