@@ -14,14 +14,6 @@ DB_PASSWORD=${5:-0} # set a default zero value if none exists
 DB_NAME=${4:-0}
 DB_NAME+="_wp";
 
-# build directory
-mkdir -p /var/www/$1/public_html
-cp -rf /var/www/$2/* /var/www/$1/public_html
-
-# build SFTP/chroot directory, and mount the home directory under it
-mkdir -p /srv/sftp/$1/web
-mount --bind /srv/sftp/$1/web /var/www/$1
-
 if [ $2 = "wordpress" ]
     then
         # download a fresh copy of wordpress, gunzip and untar it
@@ -57,16 +49,7 @@ ln -s /etc/nginx/sites-available/$1 /etc/nginx/sites-enabled
 cp /etc/nginx/snippets/ssl-snakeoil.conf /etc/nginx/snippets/ssl-$1.conf
 sed -i "s@snakeoil@$1@" /etc/nginx/snippets/ssl-$1.conf
 
-# create ftp user
-useradd $1 -d /var/www/$1
-
-# set ftp user password
-echo $1:$PASSWORD | chpasswd
-
-# append the ch script
-echo "chown $1:www-data /var/www/$1" >> /var/www/ch
-
 # change ownership and restart nginx and php
-chown $1:www-data -R /var/www/*
+/var/www/ch
 service nginx restart
 service php5-fpm restart
