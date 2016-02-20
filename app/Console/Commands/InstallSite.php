@@ -2,7 +2,7 @@
 
 use Illuminate\Console\Command;
 use App\Models\Domain;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class InstallSite
@@ -51,6 +51,8 @@ class InstallSite extends Command
     {
         $this->initCommand();
 
+        $wpConnect = DB::connection('wp_mysql');
+
         // open the site list
         $siteList = fopen($this->directories['list'], 'w');
 
@@ -69,6 +71,19 @@ class InstallSite extends Command
                 $databaseName = substr(str_replace('.', '', $domain->name), 0, 6) . date('ynj') . '_wp';
                 $databaseUsername = substr(str_replace('.', '', $domain->name), 0, 6) . date('ynj') . '_wp';
                 $databasePassword = '' . str_random(24);
+
+                // and generate the database...
+                $wpConnect->statement('CREATE DATABASE :schema', [
+                    'schema' => $databaseName,
+                ]);
+
+                // and user...
+                $wpConnect->statement('GRANT ALL PRIVILEGES ON :schema.* TO :user@:host IDENTIFIED BY :password', [
+                    'schema'   => $databaseName,
+                    'user'     => $databaseUsername,
+                    'host'     => '%',
+                    'password' => $databasePassword,
+                ]);
             }
 
             $databaseHost = env('WP_DB_HOST');

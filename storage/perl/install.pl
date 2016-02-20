@@ -52,9 +52,9 @@ if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
         }
 
         #$rc = $dbh->func('createdb', $database, $wp_db_host, $wp_db_user, $wp_db_pass, $wp_db);
-        $wp_db_user_string = "'$wp_db_user'\@'%'";
-        $dbh->do("CREATE DATABASE $wp_db");
-        $dbh->do("GRANT ALL PRIVILEGES ON $wp_db.* TO ? IDENTIFIED BY ?", $wp_db_user_string, $wp_db_pass);
+        #$wp_db_user_string = "'$wp_db_user'\@'%'";
+        #$dbh->do("CREATE DATABASE $wp_db");
+        #$dbh->do("GRANT ALL PRIVILEGES ON $wp_db.* TO ? IDENTIFIED BY ?", $wp_db_user_string, $wp_db_pass);
 
         system($storage_dir . '/bash/new_site.sh', $domain, $site_type, $wp_db, $wp_db_pass);
     }
