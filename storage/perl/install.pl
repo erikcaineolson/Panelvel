@@ -26,7 +26,7 @@ my $wp_db_user;
 my $wp_db_pass;
 my $wp_db_user_string;
 
-if (@ARGV && $ARGV[0] ne = '' && $ARGV[1] ne '') {
+if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
     $in_file = $ARGV[0];
     $storage_dir = $ARGV[1];
 
@@ -52,7 +52,7 @@ if (@ARGV && $ARGV[0] ne = '' && $ARGV[1] ne '') {
         }
 
         #$rc = $dbh->func('createdb', $database, $wp_db_host, $wp_db_user, $wp_db_pass, $wp_db);
-        $wp_db_user_string = "'$wp_db_user'@'%'";
+        $wp_db_user_string = "'$wp_db_user'\@'%'";
         $dbh->do("CREATE DATABASE $wp_db");
         $dbh->do("GRANT ALL PRIVILEGES ON $wp_db.* TO ? IDENTIFIED BY ?", $wp_db_user_string, $wp_db_pass);
 
