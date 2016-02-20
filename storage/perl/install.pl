@@ -45,7 +45,7 @@ if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
 
             system($storage_dir . '/bash/new_site.sh', $domain, $site_type, $wp_db, $wp_db_pass);
 
-            system('echo "" > ' . $in_file);
+            system('rm', $in_file);
         }
     }
 } else {
