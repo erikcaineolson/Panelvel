@@ -71,10 +71,12 @@ class InstallSite extends Command
                 $databasePassword = '' . str_random(24);
             }
 
+            $databaseHost = env('WP_DB_HOST');
+
             // build the site information string
             //  format: domain name:username:password:is WP
             //  should be: domain.com:domauser:d0m4inP4$s!:true
-            $siteInformation = '' . $domain->name . ':' . $domain->username . ':' . $domain->password . ':' . (int)$domain->is_word_press . ':' . $databaseName . ':' . $databaseUsername . ':' . $databasePassword . "\n";
+            $siteInformation = '' . $domain->name . ':' . (int)$domain->is_word_press . ':' . $databaseName . ':' . $databaseUsername . ':' . $databasePassword . ':' . $databaseHost . "\n";
 
             fwrite($siteList, $siteInformation);
 

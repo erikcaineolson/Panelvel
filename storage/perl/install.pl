@@ -12,16 +12,21 @@ my @lines;
 my $line;
 
 my $domain;
-my $user;
-my $pass;
 my $is_wp;
 my $site_type;
 
-my $wp_db = '';
-my $wp_db_user = '';
-my $wp_db_pass = '';
+my $dsn;
+my $dbh;
+my $drh;
 
-if (@ARGV && $ARGV[0] ne = '') {
+
+my $wp_db;
+my $wp_db_host;
+my $wp_db_user;
+my $wp_db_pass;
+my $wp_db_user_string;
+
+if (@ARGV && $ARGV[0] ne = '' && $ARGV[1] ne '') {
     $in_file = $ARGV[0];
     $storage_dir = $ARGV[1];
 
@@ -29,11 +34,16 @@ if (@ARGV && $ARGV[0] ne = '') {
     @lines = <USER_LIST>;
     close(USER_LIST);
 
+    # prep and connect to the database
+    $drh = DBI->install_driver("mysql");
+    $dsn = "DBI:mysql:database=wpaccounts;host=adnomiclps.cscc7jbgnayn.us-east-1.rds.amazonaws.com;port=3306";
+    $dbh = DBI->connect($dsn, 'wpbuilder', 'vsCVn9Ue2LPHu6nvLCaU2j7T');
+
     # break apart the flat file and then build the directories and users
     foreach $line (@lines)
     {
         # break up the line into components
-        ($domain, $user, $pass, $is_wp, $wp_db, $wp_db_user, $wp_db_pass) = split(':', $line);
+        ($domain, $is_wp, $wp_db, $wp_db_user, $wp_db_pass, $wp_db_host) = split(':', $line);
 
         if($is_wp == 1 || $is_wp eq '1'){
             $site_type = 'wordpress';
@@ -41,8 +51,15 @@ if (@ARGV && $ARGV[0] ne = '') {
             $site_type = 'secure_site';
         }
 
-        system($storage_dir . '/bash/new_site.sh', $domain, $site_type, $pass, $wp_db, $wp_db_pass);
+        #$rc = $dbh->func('createdb', $database, $wp_db_host, $wp_db_user, $wp_db_pass, $wp_db);
+        $wp_db_user_string = "'$wp_db_user'@'%'";
+        $dbh->do("CREATE DATABASE $wp_db");
+        $dbh->do("GRANT ALL PRIVILEGES ON $wp_db.* TO ? IDENTIFIED BY ?", $wp_db_user_string, $wp_db_pass);
+
+        system($storage_dir . '/bash/new_site.sh', $domain, $site_type, $wp_db, $wp_db_pass);
     }
+
+    $dbh->disconnect();
 } else {
-    die( "\nMissing parameters\ninstall.pl /path/to/website/list" );
+    die( "\nMissing parameters\ninstall.pl /path/to/website/list /path/to/Panelvel/storage" );
 }

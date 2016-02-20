@@ -3,15 +3,14 @@
 if [ $# -lt 3 ]
     then
         echo "Missing one or more arguments:
-                ./new_site.sh domainname.com site|wordpress password [db_name] [db_password]"
+                ./new_site.sh domainname.com secure_site|wordpress [db_name] [db_password]"
         exit 1
 fi
 
 # store the database and password info
-PASSWORD=$3
-DB_PASSWORD=${5:-0} # set a default zero value if none exists
+DB_PASSWORD=${4:-0} # set a default zero value if none exists
 
-DB_NAME=${4:-0}
+DB_NAME=${3:-0}
 DB_NAME+="_wp";
 
 if [ $2 = "wordpress" ]
