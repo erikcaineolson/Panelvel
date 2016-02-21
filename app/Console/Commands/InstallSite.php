@@ -76,7 +76,7 @@ class InstallSite extends Command
             // build the site information string
             //  format: domain name:username:password:is WP
             //  should be: domain.com:domauser:d0m4inP4$s!:true
-            $siteInformation = '' . $domain->name . ':' . (int)$domain->is_word_press . ':' . $databaseName . ':' . $databaseUsername . ':' . $databasePassword . ':' . $databaseHost . "\n";
+            $siteInformation = '' . $domain->name . ':' . (int)$domain->is_word_press . ':' . $databaseName . ':' . $databaseUsername . ':' . $databasePassword . ':' . $databaseHost . ":\n";
 
             fwrite($siteList, $siteInformation);
 
