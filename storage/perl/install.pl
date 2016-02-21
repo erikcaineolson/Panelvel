@@ -62,8 +62,10 @@ if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
                 {
                     $random_string = new String::Random();
                     my $temp_rand_str = $random_string->randpattern("ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
-                    $config_line =~ s/localhost/$wp_db_host/g;
-                    $config_line =~ s/put your unique phrase here/\Q$temp_rand_str/;
+                    my $temp_db_host = chmop($wp_db_host);
+                    
+                    $config_line =~ s/localhost/$temp_db_host/g;
+                    $config_line =~ s/put your unique phrase here/$temp_rand_str/;
 
                     print WP_CONFIG $config_line;
                 }
