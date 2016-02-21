@@ -46,13 +46,12 @@ if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
 
             # build the database
             system('touch', $storage_dir . '/sql/' . $wp_db . '.sql');
-
-            system('python', $storage_dir . '/python/create_db.py', $wp_db, $wp_db_user, $wp_db_pass, $wp_db_host);
-
             system($storage_dir . '/bash/new_site.sh', $domain, $site_type, $wp_db, $wp_db_pass, $wp_db_host);
 
             # change the keys and the localhost in the wordpress config file, since bash isn't playing nice with that
             if($site_type eq 'wordpress'){
+                system('python', $storage_dir . '/python/create_db.py', $wp_db, $wp_db_user, $wp_db_pass, $wp_db_host);
+
                 open(WP_CONFIG_IN, '<', "/var/www/$domain/public_html/wp-config.php");
                 @config_lines = <WP_CONFIG_IN>;
                 close(WP_CONFIG_IN);
@@ -63,7 +62,7 @@ if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
                     $random_string = new String::Random();
                     my $temp_rand_str = $random_string->randpattern("ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
                     my $temp_db_host = chmop($wp_db_host);
-                    
+
                     $config_line =~ s/localhost/$temp_db_host/g;
                     $config_line =~ s/put your unique phrase here/$temp_rand_str/;
 
