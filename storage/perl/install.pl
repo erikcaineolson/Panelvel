@@ -22,6 +22,7 @@ my $wp_db;
 my $wp_db_host;
 my $wp_db_user;
 my $wp_db_pass;
+my $cleaned_wp_db_host;
 
 if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
     $in_file = $ARGV[0];
@@ -36,6 +37,8 @@ if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
     {
         # break up the line into components
         ($domain, $is_wp, $wp_db, $wp_db_user, $wp_db_pass, $wp_db_host) = split(':', $line);
+
+        $cleaned_wp_db_host = chomp($wp_db_host);
 
         if($domain ne ''){
             if($is_wp == 1 || $is_wp eq '1'){
@@ -61,9 +64,8 @@ if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
                 {
                     $random_string = new String::Random();
                     my $temp_rand_str = $random_string->randpattern("ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
-                    my $temp_db_host = s/\n/$wp_db_host/;
 
-                    $config_line =~ s/localhost/$temp_db_host/g;
+                    $config_line =~ s/localhost/$cleaned_wp_db_host/;
                     $config_line =~ s/put your unique phrase here/$temp_rand_str/;
 
                     print WP_CONFIG $config_line;
