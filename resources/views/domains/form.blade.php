@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-sm-6 col-sm-offset-3 col-xs-12 col-xs-offset-0">
                 <label for="domain_name">Domain Name:</label>
-                <input class="form-control" id="domain_name" name="domain_name" type="text">
+                <input class="form-control" id="domain_name" name="domain_name" type="text" required>
             </div>
         </div>
         <div class="row">&nbsp;</div>
