@@ -32,13 +32,16 @@ if [ $2 = "wordpress" ]
         sed -i "s@database_name_here@$DB_NAME@g" /var/www/$1/public_html/wp-config-sample.php
         sed -i "s@username_here@$DB_NAME@g" /var/www/$1/public_html/wp-config-sample.php
         sed -i "s@password_here@$DB_PASSWORD@g" /var/www/$1/public_html/wp-config-sample.php
-        sed -i "s@localhost@$DB_HOST@g" /var/www/$1/public_html/wp-config-sample.php
+        #sed -i "s@localhost@$DB_HOST@g" /var/www/$1/public_html/wp-config-sample.php
         mv /var/www/$1/public_html/wp-config-sample.php /var/www/$1/public_html/wp-config.php
 
         # append a direct fix so we can auto-update without FTP access (there's no default FTP setup in fresh config files)
         echo "" >> /var/www/$1/public_html/wp-config.php
         echo "/** Sets up 'direct' method for WordPress, auto-update without FTP **/" >> /var/www/$1/public_html/wp-config.php
         echo "define('FS_METHOD', 'direct');" >> /var/www/$1/public_html/wp-config.php
+
+        # add a blank space for good measure (and ease of reading when cat'ing the file)
+        echo "" >> /var/www/$1/public_html/wp-config.php
 fi
 
 # copy proper nginx config file, and replace values
