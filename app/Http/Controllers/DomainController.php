@@ -82,6 +82,10 @@ class DomainController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'domain_name' => 'required|min:4|max:255',
+        ]);
+
         $input = $request->only([
             'domain_name',
             'is_word_press',
