@@ -3,12 +3,13 @@
 if [ $# -lt 3 ]
     then
         echo "Missing one or more arguments:
-                ./new_site.sh domainname.com secure_site|wordpress [db_name] [db_password]"
+                ./new_site.sh domainname.com secure_site|wordpress [db_name] [db_password] [db_host]"
         exit 1
 fi
 
 # store the database and password info
 DB_PASSWORD=${4:-0} # set a default zero value if none exists
+DB_HOST=${5:-0}
 
 DB_NAME=${3:-0}
 DB_NAME+="_wp";
@@ -28,12 +29,16 @@ if [ $2 = "wordpress" ]
         rmdir wordpress
 
         # make replacements in wordpress config file
-        sed -i "s@wp_db_name@$DB_NAME@g" /var/www/$1/public_html/wp-config-sample.php
-        sed -i "s@wp_db_user@$DB_NAME@g" /var/www/$1/public_html/wp-config-sample.php
-        sed -i "s@wp_db_pass@$DB_PASSWORD@g" /var/www/$1/public_html/wp-config-sample.php
-        sed -i "s@wp_ftp_user@$1@g" /var/www/$1/public_html/wp-config-sample.php
-        sed -i "s@wp_ftp_pass@$PASSWORD@g" /var/www/$1/public_html/wp-config-sample.php
+        sed -i "s@database_name_here@$DB_NAME@g" /var/www/$1/public_html/wp-config-sample.php
+        sed -i "s@username_here@$DB_NAME@g" /var/www/$1/public_html/wp-config-sample.php
+        sed -i "s@password_here@$DB_PASSWORD@g" /var/www/$1/public_html/wp-config-sample.php
+        sed -i "s@localhost@$DB_HOST@g" /var/www/$1/public_html/wp-config-sample.php
         mv /var/www/$1/public_html/wp-config-sample.php /var/www/$1/public_html/wp-config.php
+
+        # append a direct fix so we can auto-update without FTP access (there's no default FTP setup in fresh config files)
+        echo "" >> /var/www/$1/public_html/wp-config.php
+        echo "/** Sets up 'direct' method for WordPress, auto-update without FTP **/" >> /var/www/$1/public_html/wp-config.php
+        echo "define('FS_METHOD', 'direct');" >> /var/www/$1/public_html/wp-config.php
 fi
 
 # copy proper nginx config file, and replace values

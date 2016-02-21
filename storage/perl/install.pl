@@ -19,6 +19,9 @@ my $wp_db_host;
 my $wp_db_user;
 my $wp_db_pass;
 
+my $createDbSql;
+my $grantUserSql;
+
 if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
     $in_file = $ARGV[0];
     $storage_dir = $ARGV[1];
@@ -41,9 +44,11 @@ if (@ARGV && $ARGV[0] ne '' && $ARGV[1] ne '') {
             }
 
             # build the database
+            system('touch', $storage_dir . '/sql/' . $wp_db . '.sql');
+
             system('python', $storage_dir . '/python/create_db.py', $wp_db, $wp_db_user, $wp_db_pass, $wp_db_host);
 
-            system($storage_dir . '/bash/new_site.sh', $domain, $site_type, $wp_db, $wp_db_pass);
+            system($storage_dir . '/bash/new_site.sh', $domain, $site_type, $wp_db, $wp_db_pass, $wp_db_host);
 
             system('rm', $in_file);
         }
