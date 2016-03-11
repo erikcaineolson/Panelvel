@@ -10,6 +10,7 @@ class UsersTableSeeder extends Seeder
     protected function initSeeder()
     {
         $this->users = [
+            ['Admin', 'admin@admin.adm', 'password'],
         ];
     }
 
