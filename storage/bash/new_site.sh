@@ -56,5 +56,5 @@ cp /etc/nginx/snippets/snakeoil.conf /etc/nginx/snippets/ssl-$1.conf
 sed -i "s@snakeoil@$1@" /etc/nginx/snippets/ssl-$1.conf
 
 # change ownership and restart nginx and php
-/var/www/ch
+chown www-data:www-data -R /var/www/*
 service nginx restart
