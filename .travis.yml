@@ -1,0 +1,16 @@
+language: php
+
+# PHP versions to test against
+php:
+    - '5.5.9'
+    - '5.6'
+
+# Environment setup; TODO: add pgsql to the codebase and then test with it (in theory should work via Eloquent)
+env:
+    - DB=mysql
+
+install:
+    - composer install
+
+notifications:
+    email: erikcaineolson+panelvelTCI@gmail.com
