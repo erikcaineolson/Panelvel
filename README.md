@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/erikcaineolson/Panelvel.svg?branch=master)](https://travis-ci.org/erikcaineolson/Panelvel)
+
 # Panelvel
 
 Lightweight (and *very* basic) control panel for NGINX servers. Developed primarily in Laravel 5.2, with a little support from Python, Perl, and bash!
