@@ -10,7 +10,6 @@
             <th>ID</th>
             <th>Domain Name</th>
             <th>WordPress</th>
-            <th>Secure</th>
             <th>Status</th>
         </tr>
         </thead>
@@ -19,10 +18,13 @@
             @foreach ($domains as $domain)
                 <tr>
                     <td class="text-center">{{ $domain->id }}</td>
-                    <td><a href="http://{{ $domain->name }}" target="_blank">{{ $domain->name }}</a></td>
+                    <td><a href="http@if($domain->is_secure)s@endif://{{ $domain->name }}" target="_blank">{{ $domain->name }}</a></td>
                     <td class="text-center">{{ $domain->is_word_press ? 'Yes' : 'No' }}</td>
-                    <td class="text-center">{{ $domain->is_secure ? 'Yes' : 'No' }}</td>
-                    <td class="text-center">{{ $domain->trashed() ? 'Completed' : 'Queued' }}</td>
+                    <td class="text-center">
+                        <span class="glyphicon {{ $domain->trashed() ? 'glyphicon-ok text-success' : 'glyphicon-time text-info' }}" aria-label="{{ $domain->trashed() ? 'Completed' : 'Queued' }}"></span>
+                        &nbsp; &nbsp;
+                        <span class="glyphicon glyphicon-lock {{ $domain->is_secure ? 'text-success' : 'text-danger'}}" aria-label="{{ $domain->is_secure ? 'Secure Site' : 'Insecure Site' }}"></span>
+                    </td>
                 </tr>
             @endforeach
         @else
