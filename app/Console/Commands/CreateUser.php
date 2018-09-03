@@ -68,7 +68,7 @@ class CreateUser extends Command
         }
 
         $firstName = $this->ask('Please enter the user\'s first name: ');
-        $lastName = $this->ask('Plesae enter the user\'s last name: ');
+        $lastName = $this->ask('Please enter the user\'s last name: ');
 
         try {
             User::create([
