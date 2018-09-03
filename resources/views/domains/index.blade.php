@@ -10,6 +10,7 @@
             <th>ID</th>
             <th>Domain Name</th>
             <th>WordPress</th>
+            <th>Secure</th>
             <th>Status</th>
         </tr>
         </thead>
@@ -19,7 +20,8 @@
                 <tr>
                     <td class="text-center">{{ $domain->id }}</td>
                     <td><a href="http://{{ $domain->name }}" target="_blank">{{ $domain->name }}</a></td>
-                    <td class="text-center">{{ $domain->is_word_press == 1 ? 'Yes' : 'No' }}</td>
+                    <td class="text-center">{{ $domain->is_word_press ? 'Yes' : 'No' }}</td>
+                    <td class="text-center">{{ $domain->is_secure ? 'Yes' : 'No' }}</td>
                     <td class="text-center">{{ $domain->trashed() ? 'Completed' : 'Queued' }}</td>
                 </tr>
             @endforeach
