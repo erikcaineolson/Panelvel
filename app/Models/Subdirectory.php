@@ -1,6 +1,7 @@
 <?php namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Subdirectory
@@ -8,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Subdirectory extends Model
 {
+    use SoftDeletes;
+
     /**
      * @var array
      */
