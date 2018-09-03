@@ -13,7 +13,18 @@
         <div class="row">
             <div class="col-sm-6 col-sm-offset-3 col-xs-12 col-xs-offset-0">
                 <label for="is_word_press">Is this a WordPress site?</label>
-                <select class="form-control" id="is_word_press" name="is_word_press">
+                <select class="form-control" id="is_word_press" name="is_word_press" required>
+                    <option value="">Select</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-3 col-xs-12 col-xs-offset-0">
+                <label for="is_secure">Is this a secure site?</label>
+                <select class="form-control" id="is_secure" name="is_secure" required>
                     <option value="">Select</option>
                     <option value="1">Yes</option>
                     <option value="0">No</option>

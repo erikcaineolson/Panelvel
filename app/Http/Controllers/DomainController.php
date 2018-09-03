@@ -1,6 +1,5 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
 use App\Models\Domain;
 use \Exception;
 use Illuminate\Http\Request;
@@ -10,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 /**
  * Class DomainController
- * @package app\Http\Controllers
+ * @package App\Http\Controllers
  *
  * @Middleware("Auth")
  */
@@ -29,7 +28,7 @@ class DomainController extends Controller
     /**
      * Show all records (include soft-deleted records)
      *
-     * @return mixed
+     * @return Response
      */
     public function index()
     {
@@ -43,7 +42,7 @@ class DomainController extends Controller
     /**
      * Display the create form
      *
-     * @return mixed
+     * @return Response
      */
     public function create()
     {
@@ -55,7 +54,7 @@ class DomainController extends Controller
      *
      * @param $id
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Response
      */
     public function destroy($id)
     {
@@ -78,7 +77,7 @@ class DomainController extends Controller
      *
      * @param Request $request
      *
-     * @return mixed
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -89,6 +88,7 @@ class DomainController extends Controller
         $input = $request->only([
             'domain_name',
             'is_word_press',
+            'is_secure',
         ]);
 
         $password = str_random(12);
@@ -100,6 +100,7 @@ class DomainController extends Controller
                 'username'      => $input['domain_name'],
                 'password'      => $password,
                 'user_id'       => Auth::user()->id,
+                'is_secure'     => $input['is_secure'],
             ]);
 
             $request->session()->flash('success', $input['domain_name'] . ' has been created!');
