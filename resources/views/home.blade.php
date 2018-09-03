@@ -11,6 +11,8 @@
                     <ul>
                         <li class="h3" style="list-style: none;"><a href="{{ route('domain.create') }}">Create New Site</a></li>
                         <li class="h3" style="list-style: none;"><a href="{{ route('domain.index') }}">View Existing Sites</a></li>
+                        <li class="h3" style="list-style: none;"><a href="{{ route('subdirectory.create') }}">Create New Subdirectory</a></li>
+                        <li class="h3" style="list-style: none;"><a href="{{ route('subdirectory.index') }}">View Existing Subdirectories</a></li>
                     </ul>
                 </div>
             </div>
