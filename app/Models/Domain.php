@@ -18,7 +18,20 @@ class Domain extends Model
         'user_id',
         'username',
         'password',
+        'path',
+        'is_secure',
     ];
+
+
+    /**
+     * Each domain may have multiple subdirectories.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function subdirectories()
+    {
+        return $this->hasMany(Subdirectory::class);
+    }
 
     /**
      * Each domain was created by a user
