@@ -53,7 +53,7 @@ class CreateUser extends Command
         $autoGeneratePassword = $this->confirm('Do you want to auto-generate the password? [y|N]');
 
         if($autoGeneratePassword){
-            $password = file_get_contents('https://www.passwordrandom.com/query?command=password');
+            $password = file_get_contents(env('PASSWORD_GENERATOR_URL'));
         } else {
             // get the password, provided the passwords match
             do {
