@@ -50,16 +50,22 @@ class CreateUser extends Command
             $emailTries++;
         } while (User::where('email', $email)->count() > 0);
 
-        // get the password, provided the passwords match
-        do {
-            if ($passwordTries > 0) {
-                $this->error('Password exists, please try again.');
-            }
+        $autoGeneratePassword = $this->confirm('Do you want to auto-generate the password? [y|N]');
 
-            $password = $this->secret('Please enter the user\'s password: ');
-            $confirm = $this->secret('Please confirm the user\'s password: ');
-            $passwordTries++;
-        } while ($password != $confirm);
+        if($autoGeneratePassword){
+            $password = file_get_contents('https://www.passwordrandom.com/query?command=password');
+        } else {
+            // get the password, provided the passwords match
+            do {
+                if ($passwordTries > 0) {
+                    $this->error('Password exists, please try again.');
+                }
+
+                $password = $this->secret('Please enter the user\'s password: ');
+                $confirm = $this->secret('Please confirm the user\'s password: ');
+                $passwordTries++;
+            } while ($password != $confirm);
+        }
 
         $firstName = $this->ask('Please enter the user\'s first name: ');
         $lastName = $this->ask('Plesae enter the user\'s last name: ');
@@ -76,6 +82,6 @@ class CreateUser extends Command
             exit(1);
         }
 
-        $this->info('User ' . $email . ' has been successfully added!');
+        $this->info('User ' . $email . ' with password ' . $password . ' has been successfully added!');
     }
 }
