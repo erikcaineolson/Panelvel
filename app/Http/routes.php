@@ -56,4 +56,22 @@ Route::group(['middleware' => 'web'], function () {
         'as'   => 'domain.destroy',
         'uses' => 'DomainController@destroy',
     ]);
+
+    // Subdirectory Routes
+    Route::group(['prefix' => 'subdirectory'], function () {
+        Route::get('/', [
+            'as'   => 'subdirectory.index',
+            'uses' => 'SubdirectoryController@index',
+        ]);
+
+        Route::get('/new', [
+            'as'   => 'subdirectory.create',
+            'uses' => 'SubdirectoryController@create',
+        ]);
+
+        Route::post('/', [
+            'as'   => 'subdirectory.store',
+            'uses' => 'SubdirectoryController@store',
+        ]);
+    });
 });
