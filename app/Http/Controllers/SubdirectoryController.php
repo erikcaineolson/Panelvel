@@ -1,12 +1,10 @@
-<?php
-
-namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers;
 
 use App\Models\Domain;
 use App\Models\Subdirectory;
+use Exception;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
+use Illuminate\Support\Facades\Artisan;
 
 class SubdirectoryController extends Controller
 {
@@ -30,7 +28,7 @@ class SubdirectoryController extends Controller
     public function create()
     {
         return response()->view('subdirectories.form', [
-            'domains' => Domain::all()->sort(),
+            'domains' => Domain::withTrashed()->get()->sort(),
         ]);
     }
 
@@ -43,7 +41,27 @@ class SubdirectoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $input = $request->only([
+            'domain_id',
+            'subdirectory_name',
+            'is_word_press',
+        ]);
+
+        try {
+            Subdirectory::create([
+                'domain_id'     => $input['domain_id'],
+                'moniker'       => $input['subdirectory_name'],
+                'is_word_press' => $input['is_word_press'],
+            ]);
+
+            $request->session()->flash('success', $input['subdirectory_name'] . ' has been successfully created.');
+
+            Artisan::call('install-subdirectory');
+        } catch (Exception $e) {
+            $request->session()->flash('error', $input['subdirectory_name'] . ' was not created, please try again.');
+        }
+
+        return response()->redirectToRoute('subdirectory.index');
     }
 
     /**
@@ -96,6 +114,15 @@ class SubdirectoryController extends Controller
      */
     public function destroy(Subdirectory $subdirectory)
     {
-        return response()->redirectToRoute('subdirectory.index')->with('error', 'Deletes not yet supported.');
+        $request = new Request();
+
+        try {
+            $subdirectory->delete();
+            $request->flash('success', 'Subdirectory ' . $subdirectory->id . ' has been deleted.');
+        } catch (Exception $e) {
+            $request->flash('error', 'Subdirectory ' . $subdirectory->id . ' was not deleted, please try again.');
+        }
+
+        return response()->redirectToRoute('subdirectory.index');
     }
 }

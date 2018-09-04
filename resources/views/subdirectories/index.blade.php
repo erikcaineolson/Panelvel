@@ -8,6 +8,7 @@
         <thead>
         <tr>
             <th>ID</th>
+            <th>Domain</th>
             <th>Subdirectory Name</th>
             <th>WordPress</th>
             <th>Status</th>
@@ -18,8 +19,9 @@
             @foreach ($subdirectories as $subdirectory)
                 <tr>
                     <td class="text-center">{{ $subdirectory->id }}</td>
-                    <td><a href="http://{{ $subdirectory->name }}" target="_blank">{{ $subdirectory->name }}</a></td>
-                    <td class="text-center">{{ $subdirectory->is_word_press == 1 ? 'Yes' : 'No' }}</td>
+                    <td>{{ $subdirectory->domain->name }}</td>
+                    <td>{{ $subdirectory->moniker }}</td>
+                    <td class="text-center">{{ $subdirectory->is_word_press ? 'Yes' : 'No' }}</td>
                     <td class="text-center">{{ $subdirectory->trashed() ? 'Completed' : 'Queued' }}</td>
                 </tr>
             @endforeach
