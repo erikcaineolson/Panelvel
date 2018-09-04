@@ -105,7 +105,7 @@ class DomainController extends Controller
 
             $request->session()->flash('success', $input['domain_name'] . ' has been created!');
 
-            Artisan::call('install-site');
+            Artisan::call('install:site');
         } catch (Exception $e) {
             $request->session()->flash('danger', $input['domain_name'] . ' was not created, please try again.');
         }

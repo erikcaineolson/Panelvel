@@ -15,7 +15,7 @@ class InstallSite extends Command
      *
      * @var string
      */
-    protected $signature = 'install-site';
+    protected $signature = 'install:site';
 
     /**
      * The console command description
