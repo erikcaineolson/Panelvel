@@ -1,5 +1,9 @@
+from dotenv import load_dotenv
+import os
 import sys
 import mysql.connector
+
+load_dotenv()
 
 if len(sys.argv) < 5:
     print "Too few arguments; call like:\npython create_db.py database_name database_user database_pass database_host"
@@ -11,14 +15,21 @@ wp_database_user = sys.argv[2]
 wp_database_pass = sys.argv[3]
 wp_database_host = sys.argv[4]
 
-cnx = mysql.connector.connect(user=wp_database_user, password=wp_database_pass, host=wp_database_host, database=wp_database_name)
+cnx = mysql.connector.connect(
+    host=os.getenv('DB_HOST'),
+    user=os.getenv('DB_USER'),
+    passwd=os.getenv('DB_PASS')
+)
 cursor = cnx.cursor()
 
 try:
-    cursor.execute("CREATE DATABASE {0}".format(wp_database_name))
-    cursor.execute("GRANT ALL PRIVILEGES ON {0}.* TO '{1}'@'%' IDENTIFIED BY '{2}'".format(wp_database_name,
-                                                                                        wp_database_user,
-                                                                                        wp_database_pass))
+    query = "CREATE DATABASE %s; GRANT ALL PRIVILEGES ON %s.* TO '%s'@'%s' IDENTIFIED BY '%s';"
+    parameters = (wp_database_name, wp_database_name, wp_database_username, os.getenv('DB_HOST'),
+                  wp_database_password)
+
+    db_cursor.execute(query, parameters)
+    db.commit()
+
 except mysql.connector.Error as err:
     print "Failed creating database: {}".format(err)
     exit(1)
