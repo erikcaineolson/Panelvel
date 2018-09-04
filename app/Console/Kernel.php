@@ -1,8 +1,8 @@
-<?php
-
-namespace App\Console;
+<?php namespace App\Console;
 
 use App\Console\Commands\CreateUser;
+use App\Console\Commands\InstallSite;
+use App\Console\Commands\InstallSubdirectory;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -14,8 +14,9 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\InstallSite::class,
         CreateUser::class,
+        InstallSite::class,
+        InstallSubdirectory::class,
     ];
 
     /**
